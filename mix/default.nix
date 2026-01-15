@@ -4,6 +4,7 @@
     attrNames
     attrValues
     hasAttr
+    listToAttrs
     removeAttrs
     ;
 
@@ -11,7 +12,6 @@
     (nib.std)
     filterAttrs
     flipCurry
-    genAttrs
     mergeAttrsList
     nameValuePair
     ;
@@ -44,8 +44,9 @@ in rec {
   # by default the imported module is given the basename of its path
   # but you can set it manually by using the `mix.mod` function.
   importMods = list: inputs:
-    genAttrs list (path:
-      nameValuePair (modNameFromPath path) (import path inputs));
+    list
+    |> map (path: nameValuePair (modNameFromPath path) (import path inputs))
+    |> listToAttrs;
 
   # create a new and empty mixture
   newMixture = let
@@ -94,11 +95,11 @@ in rec {
 
     mkInterface = name: mixture: base:
       mergeAttrsList
-      [
+      (attrValues <| importMods meta.includes.${name} mixture)
+      ++ [
         base
         (importMods meta.submods.${name} mixture)
-      ]
-      ++ (attrValues <| importMods meta.includes.${name} mixture);
+      ];
 
     # NOTE: public submodules are still DESCENDENTS
     # NOTE: and should be able to access protected values :)
