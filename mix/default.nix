@@ -92,7 +92,7 @@ in rec {
       mergeAttrsList
       [
         base
-        (importMods meta.submodules.${name} mixture)
+        (importMods meta.submods.${name} mixture)
       ]
       ++ (attrValues <| importMods meta.includes.${name} mixture);
 
