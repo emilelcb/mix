@@ -72,8 +72,8 @@ in rec {
     # mixture components are ordered based on shadowing
     mixture =
       inputs
-      // importMods meta.submods.public mixture
-      // importMergeMods meta.includes.public mixture
+      // importMods meta.submods.public inputs
+      // importMergeMods meta.includes.public inputs
       // content;
 
     this = {
