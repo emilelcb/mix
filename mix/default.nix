@@ -7,6 +7,7 @@
     hasAttr
     length
     removeAttrs
+    replaceStrings
     split
     ;
 
@@ -26,16 +27,16 @@
     ;
 
   inherit
+    (nib.strings)
+    removeSuffix
+    ;
+
+  inherit
     (nib.types)
     Terminal
     ;
 
-  modNameFromPath = name: let
-    parts = split "." name;
-  in
-    if length parts == 1
-    then name
-    else concatStringsSep "-" (take <| length <| parts - 1) parts;
+  modNameFromPath = path: baseNameOf path |> removeSuffix ".nix" |> replaceStrings ["."] ["-"];
 in rec {
   # by default the imported module is given the basename of its path
   # but you can set it manually by using the `mix.mod` function.
