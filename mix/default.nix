@@ -3,12 +3,8 @@
     (builtins)
     attrNames
     attrValues
-    concatStringsSep
     hasAttr
-    length
     removeAttrs
-    replaceStrings
-    split
     ;
 
   inherit
@@ -18,7 +14,6 @@
     genAttrs
     mergeAttrsList
     nameValuePair
-    take
     ;
 
   inherit
@@ -29,6 +24,7 @@
   inherit
     (nib.strings)
     removeSuffix
+    hasInfix
     ;
 
   inherit
@@ -36,7 +32,14 @@
     Terminal
     ;
 
-  modNameFromPath = path: baseNameOf path |> removeSuffix ".nix" |> replaceStrings ["."] ["-"];
+  modNameFromPath = path: let
+    name = baseNameOf path |> removeSuffix ".nix";
+  in
+    assert (! hasInfix "." name)
+    || throw ''
+      Mix module ${path} has invalid name \"${name}\".
+      Module names must not contain the . (period) character.
+    ''; name;
 in rec {
   # by default the imported module is given the basename of its path
   # but you can set it manually by using the `mix.mod` function.
