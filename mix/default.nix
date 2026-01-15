@@ -44,6 +44,11 @@ in rec {
     |> map (path: nameValuePair (modNameFromPath path) (import path inputs))
     |> listToAttrs;
 
+  importMergeMods = list: inputs:
+    list
+    |> map (path: (import path inputs))
+    |> mergeAttrsList;
+
   # create a new and empty mixture
   newMixture' = let
     self = {
@@ -64,7 +69,12 @@ in rec {
     mixture // filterAttrs (x: _: ! hasAttr x mixture) sidedish;
 
   newMixture = inputs: modBuilder: let
-    mixture = inputs // content // importMods meta.includes.public mixture;
+    # mixture components are ordered based on shadowing
+    mixture =
+      inputs
+      // importMods meta.submods.public mixture
+      // importMergeMods meta.includes.public mixture
+      // content;
 
     this = {
       # trapdoor attribute
