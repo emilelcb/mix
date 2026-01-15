@@ -69,20 +69,23 @@ in rec {
     mixture // filterAttrs (x: _: ! hasAttr x mixture) sidedish;
 
   newMixture = inputs: modBuilder: let
+    inputs' = removeAttrs inputs ["this"];
+    inputsWithThis = inputs' // {this = mixture;};
+
     # mixture components are ordered based on shadowing
     mixture =
-      inputs
-      // importMods meta.submods.public inputs
-      // importMergeMods meta.includes.public inputs
+      inputs'
+      // importMods meta.submods.public inputsWithThis
+      // importMergeMods meta.includes.public inputsWithThis
       // content;
 
-    this = {
-      # trapdoor attribute
-      _' = {
-        path = [];
-      };
-      parent' = throw "Mix: The mixture's root module has no parent by definition.";
-    };
+    # this = {
+    #   # trapdoor attribute
+    #   _' = {
+    #     path = [];
+    #   };
+    #   parent' = throw "Mix: The mixture's root module has no parent by definition.";
+    # };
 
     # partition modAttrs' into metadata and content
     modAttrs' = modBuilder mixture;
