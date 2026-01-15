@@ -22,7 +22,7 @@
 
   inherit
     (nib.parse)
-    mergeStructs
+    overrideStruct
     ;
 
   inherit
@@ -67,7 +67,7 @@ in rec {
 
     # attributes expected by and that directly modify mix's behaviour
     meta =
-      flipCurry mergeStructs modAttrs
+      flipCurry overrideStruct modAttrs
       {
         includes = {
           public = [];
