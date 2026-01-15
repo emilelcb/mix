@@ -12,19 +12,15 @@
     (nib.std)
     filterAttrs
     flipCurry
+    hasInfix
     mergeAttrsList
     nameValuePair
+    removeSuffix
     ;
 
   inherit
     (nib.parse)
     overrideStruct
-    ;
-
-  inherit
-    (nib.strings)
-    removeSuffix
-    hasInfix
     ;
 
   inherit
@@ -68,7 +64,9 @@ in rec {
     mixture // filterAttrs (x: _: ! hasAttr x mixture) sidedish;
 
   mkMod = mixture: modBuilder: let
-    modAttrs = modBuilder privateMixture;
+    # XXX: TODO
+    # modAttrs = modBuilder privateMixture;
+    modAttrs = modBuilder mixture;
 
     # attributes expected by and that directly modify mix's behaviour
     meta =
@@ -90,8 +88,9 @@ in rec {
     # other random attributes (ie functions and variables the user uses)
     content = removeAttrs modAttrs (attrNames modAttrs);
 
-    protectedMixture = add [public protected] mixture;
-    privateMixture = add [private] protectedMixture;
+    # XXX: TODO
+    # protectedMixture = add [public protected] mixture;
+    # privateMixture = add [private] protectedMixture;
 
     mkInterface = name: mixture: base:
       mergeAttrsList
@@ -100,12 +99,14 @@ in rec {
         base
         (importMods meta.submods.${name} mixture)
       ];
-
+    # XXX: TODO
     # NOTE: public submodules are still DESCENDENTS
     # NOTE: and should be able to access protected values :)
-    public = mkInterface "public" protectedMixture content;
-    protected = mkInterface "protected" protectedMixture public;
-    private = mkInterface "private" privateMixture protected;
+    # public = mkInterface "public" protectedMixture content;
+    # protected = mkInterface "protected" protectedMixture public;
+    # private = mkInterface "private" privateMixture protected;
   in
-    public;
+    # XXX: TODO
+    # public;
+    modAttrs;
 }
