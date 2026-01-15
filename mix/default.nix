@@ -45,7 +45,7 @@ in rec {
     |> listToAttrs;
 
   # create a new and empty mixture
-  newMixture = let
+  newMixture' = let
     self = {
       # trapdoor attribute
       _' = {
@@ -62,6 +62,40 @@ in rec {
   in
     # bone apple tea ;-;
     mixture // filterAttrs (x: _: ! hasAttr x mixture) sidedish;
+
+  newMixture = inputs: modBuilder: let
+    mixture = inputs // content // importMods meta.includes.public mixture;
+
+    this = {
+      # trapdoor attribute
+      _' = {
+        path = [];
+      };
+      parent' = throw "Mix: The mixture's root module has no parent by definition.";
+    };
+
+    # partition modAttrs' into metadata and content
+    modAttrs' = modBuilder mixture;
+    content = removeAttrs modAttrs' (attrNames meta);
+    # attributes expected by and that directly modify mix's behaviour
+    meta =
+      flipCurry overrideStruct modAttrs'
+      {
+        includes = {
+          public = [];
+          private = [];
+          protected = [];
+        };
+        submods = {
+          public = [];
+          private = [];
+          protected = [];
+        };
+        options = Terminal {};
+        config = Terminal {};
+      };
+  in
+    mixture;
 
   mkMod = mixture: modBuilder: let
     # XXX: TODO
@@ -85,8 +119,6 @@ in rec {
         options = Terminal {};
         config = Terminal {};
       };
-    # other random attributes (ie functions and variables the user uses)
-    content = removeAttrs modAttrs (attrNames modAttrs);
 
     # XXX: TODO
     # protectedMixture = add [public protected] mixture;
@@ -105,6 +137,10 @@ in rec {
     # public = mkInterface "public" protectedMixture content;
     # protected = mkInterface "protected" protectedMixture public;
     # private = mkInterface "private" privateMixture protected;
+    content = throw "TODO";
+    public = mkInterface "public" mixture content;
+    protected = mkInterface "protected" mixture public;
+    private = mkInterface "private" mixture protected;
   in
     # XXX: TODO
     # public;
