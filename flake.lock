@@ -5,14 +5,17 @@
         "systems": "systems"
       },
       "locked": {
-        "lastModified": 1768520505,
-        "narHash": "sha256-W5O2JzaMONE8NrDRL1XpQn0XEgZkfrozTs6Wv9yMJAk=",
-        "path": "/home/me/agribit/nexus/nib",
-        "type": "path"
+        "lastModified": 1768472076,
+        "narHash": "sha256-bdVRCDy6oJx/CZiyxkke783FgtBW//wDuOAITUsQcNc=",
+        "owner": "emilelcb",
+        "repo": "nib",
+        "rev": "42ac66dfc180a13af1cc8850397db66ec5556991",
+        "type": "github"
       },
       "original": {
-        "path": "/home/me/agribit/nexus/nib",
-        "type": "path"
+        "owner": "emilelcb",
+        "repo": "nib",
+        "type": "github"
       }
     },
     "root": {

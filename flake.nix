@@ -3,8 +3,8 @@
 
   inputs = {
     nib = {
-      # url = "github:emilelcb/nib";
-      url = "/home/me/agribit/nexus/nib";
+      url = "github:emilelcb/nib";
+      # url = "/home/me/agribit/nexus/nib";
     };
   };
 
